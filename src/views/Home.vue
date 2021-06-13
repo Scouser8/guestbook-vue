@@ -1,7 +1,7 @@
 <template>
   <Header />
   <div class="home">
-    <div class="messages-container">
+    <div class="messages-container" ref="messagesContainer">
       <div v-for="message in messages" :key="message._id" class="record">
         <div class="user-container">
           <img src="../assets/user.png" alt="" class="user-icon" />
@@ -9,13 +9,21 @@
           <span class="date">{{ message.createdAt.slice(0, 10) }}</span>
         </div>
         <div class="message-container">
-          <p class="message">{{ message.content }}</p>
+          <p
+            class="message"
+            :ref="message._id"
+            @keyup="editMessage($event, message._id)"
+          >
+            {{ message.content }}
+          </p>
 
           <div
             class="message-actions-wrapper"
             v-if="message.user_id === this.$store.state.user?._id"
           >
-            <button class="editBtn" @click="editMessage">Edit</button>
+            <button class="editBtn" @click="enableEditing(message._id)">
+              Edit
+            </button>
             <button class="deleteBtn" @click="deleteMessage(message._id)">
               Delete
             </button>
@@ -32,12 +40,19 @@
               <span class="username">{{ reply.user_name }}</span>
               <span class="date">{{ reply.createdAt.slice(0, 10) }}</span>
             </div>
-            <span class="reply">{{ reply.content }}</span>
+            <span
+              class="reply"
+              :ref="reply._id"
+              @keyup="editReply($event, reply._id)"
+              >{{ reply.content }}</span
+            >
             <div
               class="reply-actions-wrapper"
               v-if="message.user_id === this.$store.state.user?._id"
             >
-              <button class="editBtn">E</button>
+              <button class="editBtn" @click="enableEditing(reply._id)">
+                E
+              </button>
               <button class="deleteBtn" @click="deleteReply(reply._id)">
                 D
               </button>
@@ -56,7 +71,7 @@
 
     <form class="new-message-wrapper" @submit.prevent="addNewMessage">
       <input
-        placeholder="Type your new message for your friends :)"
+        placeholder="Type a new message for your friends :)"
         v-model="newMsg"
       />
       <button type="submit">New Message</button>
@@ -104,6 +119,7 @@ export default {
           .then((res) => {
             this.newMsg = "";
             this.getMessages();
+            this.$refs.messagesContainer.offsetY = 0
           });
       }
     },
@@ -122,13 +138,51 @@ export default {
           });
       }
     },
+    enableEditing(msgId) {
+      this.$refs[msgId].contentEditable = true;
+      this.$refs[msgId].focus();
+    },
+    editMessage(e, msgId) {
+      if (e.target.innerText.trim() && e.key === "Enter") {
+        const messageToEdit = this.messages.find((msg) => msg._id === msgId);
+        e.target.contentEditable = false;
+        axios
+          .put(`/message/${msgId}/edit`, {
+            ...messageToEdit,
+            content: e.target.innerText,
+          })
+          .then(() => this.getMessages());
+      } else if (e.key === "Enter") {
+        e.target.contentEditable = false;
+        this.messages = [];
+        this.getMessages();
+      }
+    },
+    editReply(e, replyId) {
+      if (e.target.innerText.trim() && e.key === "Enter") {
+        const replyToEdit = this.replies.find((reply) => reply._id === replyId);
+        e.target.contentEditable = false;
+        axios
+          .put(`/reply/${replyId}/edit`, {
+            ...replyToEdit,
+            content: e.target.innerText,
+          })
+          .then(() => this.getReplies());
+      } else if (e.key === "Enter") {
+        e.target.contentEditable = false;
+        this.replies = [];
+        this.getReplies();
+      }
+    },
     deleteMessage(msgId) {
-      axios.delete(`/message/${msgId}/delete`).then(() => {
+      axios.delete(`/message/${msgId}/delete`).then((res) => {
+        alert(res.data);
         this.getMessages();
       });
     },
     deleteReply(replyId) {
-      axios.delete(`/reply/${replyId}/delete`).then(() => {
+      axios.delete(`/reply/${replyId}/delete`).then((res) => {
+        alert(res.data);
         this.getReplies();
       });
     },
@@ -238,6 +292,10 @@ export default {
   margin: 0 50px 0 50px;
 }
 
+.replies-container{
+  margin-left: 60px;
+}
+
 .add-reply-container {
   margin-top: 10px;
 }
@@ -247,6 +305,7 @@ export default {
   word-break: break-all;
   margin-right: 20px;
   color: #2c3e50;
+  padding: 7px;
   background-color: #eee;
   width: fit-content;
   border-radius: 6px;
@@ -258,7 +317,6 @@ export default {
 }
 
 .reply {
-  padding: 7px;
   margin-bottom: 10px;
   font-size: 14px;
 }
@@ -330,7 +388,7 @@ export default {
   border-radius: 9px;
 }
 
-.new-message-wrapper textarea {
+.new-message-wrapper input {
   display: block;
   resize: none;
   padding: 5px 10px;

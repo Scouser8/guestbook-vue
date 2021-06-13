@@ -1,17 +1,15 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
+import Profile from "../views/Profile.vue";
+import Aboutus from "../views/Aboutus.vue";
+import Error404 from "../views/Error404.vue";
 
 const routes = [
   {
-    path: "/login",
+    path: "/",
     name: "Login",
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/Login.vue"),
-  },
-  {
-    path: "/home",
-    name: "Home",
-    component: Home,
   },
   {
     path: "/register",
@@ -21,6 +19,26 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     component: () =>
       import(/* webpackChunkName: "about" */ "../views/Register.vue"),
+  },
+  {
+    path: "/home",
+    name: "Home",
+    component: Home,
+  },
+  {
+    path: "/profile",
+    name: "Profile",
+    component: Profile,
+  },
+  {
+    path: "/about-us",
+    name: "Aboutus",
+    component: Aboutus,
+  },
+  {
+    path: "/:catchAll(.*)",
+    name: "NotFound",
+    component: Error404,
   },
 ];
 

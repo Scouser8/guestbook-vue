@@ -1,15 +1,33 @@
 <template>
   <div class="header">
-    <span class="logo">Guestbook</span>
-    <p class="welcome-msg">Welcome, {{ $store.state.user?.user_name }}</p>
-    <router-link to="/">
-      <button class="logout-btn">Logout</button>
+    <router-link :to="{ name: 'Home' }">
+      <span class="logo">Guestbook</span>
     </router-link>
+    <div class="nav-links">
+      <router-link :to="{ name: 'Home' }">
+        <p>Home</p>
+      </router-link>
+      <router-link :to="{ name: 'Profile' }">
+        <p>Profile</p>
+      </router-link>
+      <router-link :to="{ name: 'Aboutus' }">
+        <p>About</p>
+      </router-link>
+    </div>
+    <p class="welcome-msg">Welcome, {{ $store.state.user?.first_name }}</p>
+    <button class="logout-btn" @click="logout">Logout</button>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  methods: {
+    logout() {
+      this.$store.state.user = null;
+      this.$router.push({ name: "Login" });
+    },
+  },
+};
 </script>
 
 <style>
@@ -31,6 +49,30 @@ export default {};
   color: goldenrod;
 }
 
+.nav-links {
+  margin-left: 30px;
+  display: flex;
+}
+
+.nav-links p {
+  margin-left: 25px;
+  padding: 5px 10px;
+  border-bottom: 1px solid transparent;
+  color: snow;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+  font-weight: bold;
+  cursor: pointer;
+  width: fit-content;
+}
+
+.nav-links p:hover {
+  border-color: snow;
+}
+
+.active-tab {
+  border-color: snow;
+}
+
 .welcome-msg {
   margin-left: auto;
   color: snow;
@@ -48,7 +90,7 @@ export default {};
   font-weight: bold;
 }
 
-.logout-btn:hover{
+.logout-btn:hover {
   color: #2c3e50;
   background-color: snow;
 }

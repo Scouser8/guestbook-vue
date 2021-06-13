@@ -119,7 +119,7 @@ export default {
           .then((res) => {
             this.newMsg = "";
             this.getMessages();
-            this.$refs.messagesContainer.scrollTop = 0
+            this.$refs.messagesContainer.scrollTop = 0;
           });
       }
     },
@@ -292,7 +292,7 @@ export default {
   margin: 0 50px 0 50px;
 }
 
-.replies-container{
+.replies-container {
   margin-left: 60px;
 }
 

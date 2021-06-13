@@ -1,7 +1,7 @@
 <template>
   <div class="register">
     <div class="formWrapper">
-      <h2>Welcome to Guestbook</h2>
+      <h2>Guestbook</h2>
       <form @submit.prevent="handleSubmit">
         <label for="">Email *</label>
         <input
@@ -60,8 +60,9 @@
         <button>Create new account</button>
 
         <div class="to-login">
+          <span>Already have an account? </span>
           <router-link :to="{ name: 'Login' }"
-            >Already have an account? Go to Sign In.</router-link
+            >Go to Sign In.</router-link
           >
         </div>
       </form>

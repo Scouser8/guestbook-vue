@@ -119,7 +119,7 @@ export default {
           .then((res) => {
             this.newMsg = "";
             this.getMessages();
-            this.$refs.messagesContainer.offsetY = 0
+            this.$refs.messagesContainer.scrollTop = 0
           });
       }
     },

@@ -1,24 +1,13 @@
 # guestbook-frontend
 
-## Project setup
-```
-npm install
-```
+This is a guestbook prototype developed using Vue.js 3
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+Concepts applied: Vuex, data/state management, binding, life cycle methods, routing.
+Built with native html/css/js & vue.js features, no 3rd part UI libraries used
 
-### Compiles and minifies for production
-```
-npm run build
-```
+****How to use this project****
+Clone the code from the GitHub repository or download the file.
 
-### Run your unit tests
-```
-npm run test:unit
-```
+npm install   =>  To install all required dependencies
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+npm run serve   => To start the server locally
